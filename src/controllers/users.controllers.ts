@@ -17,4 +17,13 @@ function getAllUsers(_req: Request, res: Response) {
     res.status(200).json(result?.rows)
   })
 }
-export { usersRoutes, getAllUsers }
+function getUserById(req: Request, res: Response) {
+  const id = parseInt(req.params.id)
+  pool.query('SELECT * FROM users WHERE id = $1', [id], (error, result) => {
+    if (result === undefined) {
+      res.status(404).json(error)
+    }
+    res.status(200).json(result?.rows)
+  })
+}
+export { usersRoutes, getAllUsers, getUserById }
