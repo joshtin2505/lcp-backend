@@ -1,23 +1,9 @@
 import { Router } from 'express'
-import pool from '../db'
+import { getAllUsers, usersRoutes } from '../controllers/users.controllers'
 
 const router = Router()
 
-router.get('/', (_req, res) => {
-  res.json({
-    message: 'Users Endpoints',
-    entpoints: {
-      all: '/users/all'
-    }
-  })
-})
-router.get('/all', (_req, res) => {
-  pool.query('SELECT * FROM users', (error, result) => {
-    if (result === undefined) {
-      res.status(404).json(error)
-    }
-    res.status(200).json(result?.rows)
-  })
-})
+router.get('/', usersRoutes)
+router.get('/all', getAllUsers)
 
 export default router
