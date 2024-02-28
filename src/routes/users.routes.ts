@@ -13,13 +13,10 @@ router.get('/', (_req, res) => {
 })
 router.get('/all', (_req, res) => {
   pool.query('SELECT * FROM users', (error, result) => {
-    // if (error) {
-    //   throw error
-    // }
     if (result === undefined) {
-      res.status(404).json({ message: 'Err', error })
+      res.status(404).json(error)
     }
-    res.status(200).json(result.rows)
+    res.status(200).json(result?.rows)
   })
 })
 
