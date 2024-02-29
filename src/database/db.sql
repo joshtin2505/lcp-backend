@@ -68,62 +68,81 @@ CREATE TABLE paymethod (
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
 -- Users Foraneign Keys
 ALTER TABLE users
-ADD CONSTRAINT fk_cart
+ADD CONSTRAINT "fk_cart"
 FOREIGN KEY (cart_id)
-REFERENCES cart(cart_id);
+REFERENCES cart(cart_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 ALTER TABLE users
-ADD CONSTRAINT fk_orders
+ADD CONSTRAINT "fk_orders"
 FOREIGN KEY (orders_id)
-REFERENCES orders(order_id);
+REFERENCES orders(order_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 -- Cart Foraneign Keys
 ALTER TABLE cart
-ADD CONSTRAINT fk_user
+ADD CONSTRAINT "fk_user"
 FOREIGN KEY (user_id)
-REFERENCES users(user_id);
+REFERENCES users(user_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 -- productsInCart Foraneign Keys
 ALTER TABLE productsInCart
-ADD CONSTRAINT fk_cart
+ADD CONSTRAINT "fk_cart"
 FOREIGN KEY (cart_id) 
-REFERENCES cart(cart_id);
+REFERENCES cart(cart_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 ALTER TABLE productsInCart
-ADD CONSTRAINT fk_product
+ADD CONSTRAINT "fk_product"
 FOREIGN KEY (product_id) 
-REFERENCES products(product_id);
+REFERENCES products(product_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 -- Orders Foraneign Keys
 ALTER TABLE orders
-ADD CONSTRAINT fk_user
+ADD CONSTRAINT "fk_user"
 FOREIGN KEY (user_id)
-REFERENCES users(user_id);
+REFERENCES users(user_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 ALTER TABLE orders
-ADD CONSTRAINT fk_paymethod
+ADD CONSTRAINT "fk_paymethod"
 FOREIGN KEY (paymethod_id)
-REFERENCES paymethod(paymethod_id);
+REFERENCES paymethod(paymethod_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 -- productsInOrder Foraneign Keys
 ALTER TABLE productsInOrder
-ADD CONSTRAINT fk_order
+ADD CONSTRAINT "fk_order"
 FOREIGN KEY (order_id)
-REFERENCES orders(order_id);
+REFERENCES orders(order_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 ALTER TABLE productsInOrder
-ADD CONSTRAINT fk_product
+ADD CONSTRAINT "fk_product"
 FOREIGN KEY (product_id)
-REFERENCES products(product_id);
+REFERENCES products(product_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 -- Paymethod Foraneign Keys
 ALTER TABLE paymethod
-ADD CONSTRAINT fk_user
+ADD CONSTRAINT "fk_user"
 FOREIGN KEY (user_id)
-REFERENCES users(user_id);
+REFERENCES users(user_id)
+ON UPDATE CASCADE
+ON DELETE CASCADE;
 
 
 -- INSERT INTO users (name, email, password, rol)
