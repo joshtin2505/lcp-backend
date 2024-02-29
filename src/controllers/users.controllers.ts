@@ -26,4 +26,18 @@ function getUserById(req: Request, res: Response) {
     res.status(200).json(result?.rows)
   })
 }
-export { usersRoutes, getAllUsers, getUserById }
+function addUser(req: Request, res: Response) {
+  const { name, email, lastName } = req.body
+  pool.query(
+    `INSERT INTO users (name, lastName, email, password, phone, address, city, zip, country, role) 
+    VALUES ($1, $2)`,
+    [name, lastName, email],
+    (error, result) => {
+      if (result === undefined) {
+        res.status(404).json(error)
+      }
+      res.status(201).json(result?.rows)
+    }
+  )
+}
+export { usersRoutes, getAllUsers, getUserById, addUser }

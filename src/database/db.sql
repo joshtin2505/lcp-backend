@@ -6,16 +6,19 @@ CREATE DATABASE casitadepapel;
 
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
-    name VARCHAR(40),
+    name VARCHAR(40) NOT NULL,
     lastName VARCHAR(60),
-    email TEXT,
-    password TEXT,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    country VARCHAR(100),
+    city VARCHAR(100),
+    address VARCHAR(150),
+    zip INT,
+    phone TEXT,
+    rol ENUM('admin', 'user') DEFAULT 'user' NOT NULL,
+    preferens JSON DEFAULT NULL,
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    direccion TEXT Not Null,
-    telefono TEXT,
-    rol ENUM('admin', 'user') DEFAULT 'user',
-    preferencias JSON,
     cart_id SERIAL, -- FOREIGN KEY
     orders_id SERIAL -- FOREIGN KEY
 );
@@ -67,6 +70,7 @@ CREATE TABLE paymethod (
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 -- Users Foraneign Keys
 ALTER TABLE users
