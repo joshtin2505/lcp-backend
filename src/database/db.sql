@@ -9,25 +9,37 @@ CREATE TABLE users (
     name VARCHAR(40) NOT NULL,
     lastName VARCHAR(60),
     email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
+    password TEXT NOT NULL,    
+    phone INT,
+    phonePrefix INT,
+    role ENUM('admin', 'user') DEFAULT 'user' NOT NULL,
+    preferens JSON DEFAULT NULL,
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE address (
+    address_id SERIAL PRIMARY KEY,
+    user_id SERIAL, -- FOREIGN KEY
     country VARCHAR(100),
     city VARCHAR(100),
     address VARCHAR(150),
     zip INT,
-    phone TEXT,
-    rol ENUM('admin', 'user') DEFAULT 'user' NOT NULL,
-    preferens JSON DEFAULT NULL,
+);
+
+CREATE TABLE products_categories (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    description TEXT,
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    cart_id SERIAL, -- FOREIGN KEY
-    orders_id SERIAL -- FOREIGN KEY
+    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE products (
     product_id SERIAL PRIMARY KEY,
     name VARCHAR(100),
     description TEXT,
-    tags TEXT[],
+    category_id SERIAL, -- FOREIGN KEY
     price DECIMAL(10, 2),
     stock INT,
     img_url TEXT,
@@ -71,22 +83,13 @@ CREATE TABLE paymethod (
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
--- Users Foraneign Keys
-ALTER TABLE users
-ADD CONSTRAINT "fk_cart"
-FOREIGN KEY (cart_id)
-REFERENCES cart(cart_id)
+-- address Foraneign Keys
+ALTER TABLE address
+ADD CONSTRAINT "fk_user"
+FOREIGN KEY (user_id)
+REFERENCES users(user_id)
 ON UPDATE CASCADE
-ON DELETE CASCADE;
-
-ALTER TABLE users
-ADD CONSTRAINT "fk_orders"
-FOREIGN KEY (orders_id)
-REFERENCES orders(order_id)
-ON UPDATE CASCADE
-ON DELETE CASCADE;
-
+ON DELETE CASCADE; 
 -- Cart Foraneign Keys
 ALTER TABLE cart
 ADD CONSTRAINT "fk_user"
