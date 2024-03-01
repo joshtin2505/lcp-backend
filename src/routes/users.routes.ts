@@ -9,6 +9,6 @@ const router = Router()
 
 router.get('/', usersRoutes)
 router.get('/all', getAllUsers)
-router.get('/:id', getUserById)
+router.get('/:userId', getUserById)
 
 export default router
