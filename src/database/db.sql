@@ -12,7 +12,7 @@ CREATE TABLE users (
     password TEXT NOT NULL,    
     phone INT,
     phonePrefix INT,
-    role ENUM('admin', 'user') DEFAULT 'user' NOT NULL,
+    role ENUM('masterAdmin', 'admin', 'user') DEFAULT 'user' NOT NULL,
     preferens JSON DEFAULT NULL,
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -24,7 +24,8 @@ CREATE TABLE address (
     country VARCHAR(100),
     city VARCHAR(100),
     address VARCHAR(150),
-    zip INT,
+    state VARCHAR(100),
+    zipCode INT,
 );
 
 CREATE TABLE products_categories (
