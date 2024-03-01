@@ -25,13 +25,14 @@ CREATE TABLE address (
     city VARCHAR(100),
     address VARCHAR(150),
     state VARCHAR(100),
-    zip_Code INT,
+    zip_code INT,
 );
 
 CREATE TABLE products_categories (
     category_id SERIAL PRIMARY KEY,
     name VARCHAR(100),
     description TEXT,
+    img_url TEXT,
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
