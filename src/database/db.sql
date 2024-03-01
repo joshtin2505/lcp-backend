@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS casitadepapel;
 CREATE DATABASE casitadepapel;
 
 \l
@@ -154,7 +155,9 @@ ON UPDATE CASCADE
 ON DELETE CASCADE;
 
 
--- INSERT INTO users (name, email, password, rol)
+INSERT INTO users (name, lastName, email, password, role)
+VALUES ('justin', 'castro p', 'justincastro2505@gmail.com', 'superAdmin', 'masterAdmin')
+
 
 -- INSERT INTO users (name, email)
 --     VALUES ('joe', 'joe@ibm.com'),
