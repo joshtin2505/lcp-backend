@@ -28,14 +28,19 @@ function getAllUsers(_req: Request, res: Response) {
 }
 function getUserById(req: Request, res: Response) {
   const id = req.params.userId
+  console.log(id)
   pool.query(
     'SELECT * FROM users WHERE user_id = $1',
     [id],
     (error, result) => {
       if (error) {
         res.status(404).json(error)
+        return
+      } else if (result.rowCount === 0) {
+        res.status(404).json({ message: 'No hay usuarios con este id' })
+        return
       }
-      res.status(200).json(result?.rows)
+      res.status(200).json(result.rows)
     }
   )
 }
