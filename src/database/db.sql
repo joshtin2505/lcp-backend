@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS casitadepapel;
+DROP DATABASE IF EXISTS casitadepapel;
 CREATE DATABASE casitadepapel;
 
 \l
@@ -13,7 +13,7 @@ CREATE TABLE users (
     password TEXT NOT NULL,    
     phone INT,
     phonePrefix INT,
-    role ENUM('masterAdmin', 'admin', 'user') DEFAULT 'user' NOT NULL,
+    role VARCHAR(20) DEFAULT 'user' NOT NULL CHECK (role IN ('masterAdmin', 'admin', 'user')),
     preferens JSON DEFAULT NULL,
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -26,7 +26,7 @@ CREATE TABLE address (
     city VARCHAR(100),
     address VARCHAR(150),
     state VARCHAR(100),
-    zip_code INT,
+    zip_code INT
 );
 
 CREATE TABLE products_categories (
@@ -45,7 +45,7 @@ CREATE TABLE products (
     category_id SERIAL, -- FOREIGN KEY
     price DECIMAL(10, 2),
     stock INT,
-    img_url TEXT,
+    img_url TEXT
 );
 
 CREATE TABLE cart (
@@ -81,9 +81,9 @@ CREATE TABLE paymethod (
     paymethod_id SERIAL PRIMARY KEY,
     name VARCHAR(100),
     description TEXT,
-    user_id SERIAL -- FOREIGN KEY,
-    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_id SERIAL,
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- address Foraneign Keys
