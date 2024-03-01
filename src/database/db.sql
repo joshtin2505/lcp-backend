@@ -155,8 +155,8 @@ ON UPDATE CASCADE
 ON DELETE CASCADE;
 
 
-INSERT INTO users (name, lastName, email, password, role)
-VALUES ('justin', 'castro p', 'justincastro2505@gmail.com', 'superAdmin', 'masterAdmin');
+INSERT INTO users (user_id, name, lastName, email, password, role)
+VALUES (100, 'justin', 'castro p', 'justincastro2505@gmail.com', 'superAdmin', 'masterAdmin');
 
 
 -- INSERT INTO users (name, email)
