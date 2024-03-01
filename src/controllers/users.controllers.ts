@@ -6,11 +6,11 @@ function usersRoutes(_req: Request, res: Response) {
   res.json({
     message: 'Users Endpoints',
     entpoints: {
-      getAllUsers: '/users/all',
-      getUserById: '/users/:userId',
-      addUser: '/users/add',
-      updateUser: '/users/update',
-      deleteUser: '/users/delete/:userId'
+      all: '/users/all',
+      getById: '/users/:userId',
+      add: '/users/add',
+      update: '/users/update',
+      delete: '/users/delete/:userId'
     }
   })
 }
