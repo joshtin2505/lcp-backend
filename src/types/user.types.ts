@@ -11,9 +11,9 @@ interface User {
   email: Email
   password: string
   role: Role
-  phone: number
-  phonePrefix: PhonePrefix
-  preferens: {
+  phone?: number
+  phonePrefix?: PhonePrefix
+  preferens?: {
     language: Langs
     theme: Themes
   }
