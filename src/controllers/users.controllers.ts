@@ -18,6 +18,10 @@ function getAllUsers(_req: Request, res: Response) {
   pool.query('SELECT * FROM users', (error, result) => {
     if (error) {
       res.status(404).json(error)
+      return
+    } else if (result.rowCount === 0) {
+      res.status(404).json({ message: 'No hay usuarios' })
+      return
     }
     res.status(200).json(result.rows)
   })
@@ -68,6 +72,7 @@ function deleteUser(req: Request, res: Response) {
   pool.query('DELETE FROM users WHERE user_id = $1', [id], (error, result) => {
     if (error) {
       res.status(404).json(error)
+      return
     }
     res.status(201).json(result.rows)
   })
