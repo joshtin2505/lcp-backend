@@ -44,7 +44,7 @@ function getUserAddress(req: Request, res: Response) {
 function addAddress(req: Request, res: Response) {
   const { address, city, state, country, zipCode, userId } = req.body
   pool.query(
-    `INSERT INTO address (address, city, state, country, zipCode, user_id) 
+    `INSERT INTO address (address, city, state, country, zip_Code, user_id) 
       VALUES ($1, $2, $3, $4, $5, $6)`,
     [address, city, state, country, zipCode, userId],
     (error, result) => {
@@ -58,7 +58,7 @@ function addAddress(req: Request, res: Response) {
 function updateUserAddress(req: Request, res: Response) {
   const { address, city, state, country, zipCode, userId, addressId } = req.body
   pool.query(
-    `UPDATE address SET address = $1, city = $2, state = $3, country = $4, zipCode = $5 WHERE user_id = $6 AND address_id = $7`,
+    `UPDATE address SET address = $1, city = $2, state = $3, country = $4, zip_Code = $5 WHERE user_id = $6 AND address_id = $7`,
     [address, city, state, country, zipCode, userId, addressId],
     (error, result: any) => {
       if (error) {

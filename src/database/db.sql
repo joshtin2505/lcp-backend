@@ -25,7 +25,7 @@ CREATE TABLE address (
     city VARCHAR(100),
     address VARCHAR(150),
     state VARCHAR(100),
-    zipCode INT,
+    zip_Code INT,
 );
 
 CREATE TABLE products_categories (
