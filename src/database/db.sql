@@ -79,9 +79,15 @@ CREATE TABLE productsInOrder (
 );
 CREATE TABLE paymethod (
     paymethod_id SERIAL PRIMARY KEY,
-    name VARCHAR(100),
-    description TEXT,
-    user_id SERIAL,
+    method_name VARCHAR(100),
+    user_id SERIAL, -- FOREIGN KEY
+    cart_number VARCHAR(16),
+    expiration_date DATE,
+    cvv INT,
+    cart_type VARCHAR(20),
+    issuing_bank VARCHAR(100),
+    issuing_country VARCHAR(100),
+    cart_status VARCHAR(20),
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
