@@ -17,3 +17,6 @@ dist/
 
 # Dependency lock files
 package-lock.json
+
+# postgres commant prompt file in vscode
+postgres.session.sql
