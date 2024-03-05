@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import type { Request, Response } from 'express'
 import pool from '../db'
+import type { OrdinalRole, User } from '../types/user.types'
+import { roles } from '../types/user.types'
 
 function usersRoutes(_req: Request, res: Response) {
   res.json({
@@ -45,7 +47,22 @@ function getUserById(req: Request, res: Response) {
   )
 }
 function addUser(req: Request, res: Response) {
-  const { name, email, lastName, password, role } = req.body
+  const { name, email, lastName, password, role }: User = req.body
+  pool.query(
+    `INSERT INTO users (name, lastName, email, password, role) 
+    VALUES ($1, $2, $3, $4, $5)`,
+    [name, lastName, email, password, role],
+    (error, result) => {
+      if (error) {
+        res.status(404).json(error)
+      }
+      res.status(201).json(result.rows)
+    }
+  )
+}
+function addOrdinalUser(req: Request, res: Response) {
+  const { name, email, lastName, password } = req.body
+  const role: OrdinalRole = roles.user
   pool.query(
     `INSERT INTO users (name, lastName, email, password, role) 
     VALUES ($1, $2, $3, $4, $5)`,
@@ -88,5 +105,6 @@ export {
   getUserById,
   addUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  addOrdinalUser
 }
