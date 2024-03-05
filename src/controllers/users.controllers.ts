@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import type { Request, Response } from 'express'
 import pool from '../db'
-import type { Id, OrdinalRole, User } from '../types/user.types'
-import { roles } from '../types/user.types'
+import type { Id, OrdinalRole, User } from '../types/user.types.d'
+import { roles } from '../types/user.types.d'
 
 function usersRoutes(_req: Request, res: Response) {
   res.json({
