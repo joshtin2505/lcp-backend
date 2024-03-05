@@ -2,7 +2,7 @@
 import type { Request, Response } from 'express'
 import pool from '../db'
 import type { Id, OrdinalRole, User } from '../types/user.types.d'
-import { roles } from '../types/user.types.d'
+import { roles } from '../constant/constantes'
 
 function usersRoutes(_req: Request, res: Response) {
   res.json({

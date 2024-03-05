@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
-import { roles } from '../types/user.types'
+import { roles } from '../constant/constantes'
 
 interface RequestWithUser extends Request {
   user: {
