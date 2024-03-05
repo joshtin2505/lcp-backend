@@ -27,3 +27,5 @@ function getAllCarts(_req: Request, res: Response) {
     res.status(200).json(result.rows)
   })
 }
+
+export { cartRoutes, getAllCarts }
