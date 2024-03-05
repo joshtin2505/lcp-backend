@@ -7,6 +7,7 @@ type PhonePrefix = `+${number}`
 type Langs = 'en' | 'es' | 'fr'
 type Themes = 'dark' | 'light' | 'system'
 interface User {
+  userId?: Id
   name: Names
   lastName: Names
   email: Email
