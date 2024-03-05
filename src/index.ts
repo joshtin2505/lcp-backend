@@ -1,5 +1,6 @@
 import app, { PORT } from './app'
+import { dbConect } from './db'
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port http://localhost:${PORT} 🚀`)
+  dbConect(PORT)
 })
