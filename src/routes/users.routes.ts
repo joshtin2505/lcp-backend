@@ -4,6 +4,7 @@ import {
   getUserById,
   usersRoutes,
   addUser,
+  addOrdinalUser,
   updateUser,
   deleteUser
 } from '../controllers/users.controllers'
@@ -16,6 +17,9 @@ router.get('/all', authMasterAdmin, getAllUsers)
 router.get('/:userId', authMasterAdmin, getUserById)
 router.post('/add', authMasterAdmin, addUser)
 router.put('/update', authMasterAdmin, updateUser)
-router.delete('/delete/:userId', authMasterAdmin, deleteUser)
+
+router.post('/add-ordinal', addOrdinalUser)
+
+router.delete('/delete/:userId', deleteUser)
 
 export default router
