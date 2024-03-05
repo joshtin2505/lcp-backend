@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
+import { roles } from '../types/user.types'
 
 interface RequestWithUser extends Request {
   user: {
@@ -12,7 +13,7 @@ export const authMasterAdmin = (
   next: NextFunction
 ) => {
   const { user } = req as RequestWithUser
-  if (user.roll !== 'masterAdmin') {
+  if (user.roll !== roles.masterAdmin) {
     return res.status(403).json({ message: 'Forbidden' })
   }
   next()
@@ -21,7 +22,7 @@ export const authMasterAdmin = (
 
 export const authAdmin = (req: Request, res: Response, next: NextFunction) => {
   const { user } = req as RequestWithUser
-  if (user.roll !== 'admin') {
+  if (user.roll !== roles.admin && user.roll !== roles.masterAdmin) {
     return res.status(403).json({ message: 'Forbidden' })
   }
   next()
@@ -30,7 +31,11 @@ export const authAdmin = (req: Request, res: Response, next: NextFunction) => {
 
 export const authUser = (req: Request, res: Response, next: NextFunction) => {
   const { user } = req as RequestWithUser
-  if (user.roll !== 'user') {
+  if (
+    user.roll !== roles.admin &&
+    user.roll !== roles.masterAdmin &&
+    user.roll !== roles.user
+  ) {
     return res.status(403).json({ message: 'Forbidden' })
   }
   next()
