@@ -8,18 +8,28 @@ import {
   updateUser,
   deleteUser
 } from '../controllers/users.controllers'
-import { authMasterAdmin } from '../middlewares/validateRoll.middlewares'
+import {
+  authMasterAdmin,
+  authUser,
+  authAdmin
+} from '../middlewares/validateRoll.middlewares'
 
 const router = Router()
 
 router.get('/', usersRoutes)
-router.get('/all', authMasterAdmin, getAllUsers)
-router.get('/:userId', authMasterAdmin, getUserById)
+
+// This routes is for master admin
 router.post('/add', authMasterAdmin, addUser)
-router.put('/update', authMasterAdmin, updateUser)
 
+// This routes is for admin and master admin
+router.get('/all', authAdmin, getAllUsers)
+router.get('/:userId', authAdmin, getUserById)
+
+// This routes is for all users
+router.delete('/delete/:userId', authUser, deleteUser)
+router.put('/update', authUser, updateUser)
+
+// This route is for no auth users
 router.post('/add-ordinal', addOrdinalUser)
-
-router.delete('/delete/:userId', deleteUser)
 
 export default router
