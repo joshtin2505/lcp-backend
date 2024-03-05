@@ -1,7 +1,8 @@
 type Id = number
 type Names = `${string} ${string}` | string
 type Email = `${string}@${string}.${string}`
-type Role = 'masterAdmin' | 'admin' | 'user'
+type OrdinalRole = roles.user
+type SuperRole = roles.masterAdmin | roles.admin
 type PhonePrefix = `+${number}`
 type Langs = 'en' | 'es' | 'fr'
 type Themes = 'dark' | 'light' | 'system'
@@ -10,7 +11,7 @@ interface User {
   lastName: Names
   email: Email
   password: string
-  role: Role
+  role: OrdinalRole | SuperRole
   phone?: number
   phonePrefix?: PhonePrefix
   preferens?: {
@@ -18,4 +19,19 @@ interface User {
     theme: Themes
   }
 }
-export type { Id, User, Names, Email, Role, PhonePrefix, Langs, Themes }
+export enum roles {
+  user = 'user',
+  masterAdmin = 'masterAdmin',
+  admin = 'admin'
+}
+export type {
+  Id,
+  User,
+  Names,
+  Email,
+  OrdinalRole,
+  PhonePrefix,
+  Langs,
+  Themes,
+  SuperRole
+}
