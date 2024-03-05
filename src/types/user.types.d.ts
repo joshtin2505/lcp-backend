@@ -1,3 +1,5 @@
+import type { roles } from '../constant/constantes'
+
 type Id = number
 type Names = `${string} ${string}` | string
 type Email = `${string}@${string}.${string}`
@@ -20,11 +22,7 @@ interface User {
     theme: Themes
   }
 }
-export enum roles {
-  user = 'user',
-  masterAdmin = 'masterAdmin',
-  admin = 'admin'
-}
+
 export type {
   Id,
   User,
