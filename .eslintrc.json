@@ -30,6 +30,7 @@
         "varsIgnorePattern": "^_",
         "ignoreRestSiblings": true
       }
-    ]
+    ],
+    "@typescript-eslint/naming-convention": "warn"
   }
 }
