@@ -4,7 +4,7 @@ CREATE TABLE cart (
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE productsInCart (
+CREATE TABLE cart_items (
     cart_item_id SERIAL PRIMARY KEY,
     cart_id SERIAL, -- FOREIGN KEY
     product_id SERIAL, -- FOREIGN KEY 
