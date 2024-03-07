@@ -3,12 +3,11 @@ CREATE TABLE orders (
     order_id SERIAL PRIMARY KEY, 
     user_id INT, -- FOREIGN KEY
     paymethod_id SERIAL, -- FOREIGN KEY
-    products JSON,
     total DECIMAL(10, 2),
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE productsInOrder (
+CREATE TABLE order_items (
     order_item_id SERIAL PRIMARY KEY,
     order_id SERIAL, -- FOREIGN KEY
     product_id SERIAL, -- FOREIGN KEY
