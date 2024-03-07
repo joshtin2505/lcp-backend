@@ -30,15 +30,15 @@ REFERENCES paymethod(paymethod_id)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
--- productsInOrder Foraneign Keys
-ALTER TABLE productsInOrder
+-- order_items Foraneign Keys
+ALTER TABLE order_items
 ADD CONSTRAINT "fk_order"
 FOREIGN KEY (order_id)
 REFERENCES orders(order_id)
 ON UPDATE CASCADE
 ON DELETE CASCADE;
 
-ALTER TABLE productsInOrder
+ALTER TABLE order_items
 ADD CONSTRAINT "fk_product"
 FOREIGN KEY (product_id)
 REFERENCES products(product_id)
