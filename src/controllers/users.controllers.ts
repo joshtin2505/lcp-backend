@@ -7,7 +7,7 @@ import type {
   Id,
   OrdinalRole,
   User,
-  Users,
+  // Users,
   RequestLoginType
 } from '../types/user.types.d'
 import { roles } from '../constant/constantes'
@@ -26,7 +26,7 @@ function usersRoutes(_req: Request, res: Response) {
 }
 function getAllUsers(_req: Request, res: Response) {
   pool.query(
-    'SELECT user_id, name, last_name, email, phone, phone_prefix FROM users',
+    'SELECT user_id, name, last_name, email, phone, phone_prefix FROM users;',
     (error, result) => {
       if (error) {
         res.status(404).json(error)
@@ -58,25 +58,25 @@ function getUserById(req: Request, res: Response) {
 }
 async function addUser(req: Request, res: Response) {
   const { name, email, last_name, password, role }: User = req.body
-  const passwordHash = await bycript.hash(password, 10)
-  pool.query(
-    `INSERT INTO users (name, lastName, email, password, role) 
+  try {
+    const passwordHash = await bycript.hash(password, 10)
+    const result = await pool.query(
+      `INSERT INTO users (name, last_name, email, password, role) 
     VALUES ($1, $2, $3, $4, $5)`,
-    [name, last_name, email, passwordHash, role],
-    (error, result) => {
-      if (error) {
-        res.status(404).json(error)
-      }
-      const data = result.rows as Users
-      res.status(201).json(data.map((user) => ({ ...user, password: '*****' })))
-    }
-  )
+      [name, last_name, email, passwordHash, role]
+    )
+    console.log(result)
+    return res.status(201).json({ message: 'Usuario creado' })
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: 'Error al agregar usuario' })
+  }
 }
 function addOrdinalUser(req: Request, res: Response) {
   const { name, email, last_name, password }: User = req.body
   const role: OrdinalRole = roles.user
   pool.query(
-    `INSERT INTO users (name, lastName, email, password, role) 
+    `INSERT INTO users (name, last_name, email, password, role) 
     VALUES ($1, $2, $3, $4, $5)`,
     [name, last_name, email, password, role],
     (error, result) => {
@@ -103,7 +103,7 @@ function updateUser(req: Request, res: Response) {
     return
   }
   pool.query(
-    `UPDATE users SET name = $1, lastName = $2, email = $3, password = $4, role = $5, phone = $6, phonePrefix = $7 WHERE user_id = $8`,
+    `UPDATE users SET name = $1, last_name = $2, email = $3, password = $4, role = $5, phone = $6, phonePrefix = $7 WHERE user_id = $8`,
     [name, last_name, email, password, role, phone, phone_prefix, user_id],
     (error, result: any) => {
       if (result === undefined) {
