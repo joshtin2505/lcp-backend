@@ -7,5 +7,5 @@ CREATE DATABASE casitadepapel;
 
 -- Create tables
 
-INSERT INTO users (user_id, name, lastName, email, password, role)
+INSERT INTO users (user_id, name, last_name, email, password, role)
 VALUES (1, 'justin', 'castro p', 'justincastro2505@gmail.com', 'superAdmin', 'masterAdmin');

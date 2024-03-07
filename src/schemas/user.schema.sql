@@ -1,7 +1,7 @@
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     name VARCHAR(40) NOT NULL,
-    lastn_name VARCHAR(60),
+    last_name VARCHAR(60),
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,    
     phone INT,
