@@ -7,7 +7,6 @@ CREATE TABLE users (
     phone INT,
     phonePrefix INT,
     role VARCHAR(20) DEFAULT 'user' NOT NULL CHECK (role IN ('masterAdmin', 'admin', 'user')),
-    preferens JSON DEFAULT NULL,
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
