@@ -22,6 +22,10 @@ interface User {
     theme: Themes
   }
 }
+interface RequestLoginType {
+  email: Email
+  password: string
+}
 type Users = User[]
 export type {
   Id,
@@ -33,5 +37,6 @@ export type {
   Langs,
   Themes,
   Users,
-  SuperRole
+  SuperRole,
+  RequestLoginType
 }
