@@ -9,6 +9,8 @@ import { Pool } from 'pg'
 // })
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL + '?sslmode=require'
+  // connectionString:
+  //   'postgres://casitadepapel:5t2eOI4chqjCQ2quTUHmvFmSN89AGT3J@dpg-cnjntc21hbls73dqroi0-a.oregon-postgres.render.com/casitadepapel?sslmode=require'
 })
 
 export function dbConect(PORT: number) {
