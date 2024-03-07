@@ -11,7 +11,7 @@ type Themes = 'dark' | 'light' | 'system'
 interface User {
   user_id?: Id
   name: Names
-  last_name: Names
+  last_name?: Names
   email: Email
   password: string
   role: OrdinalRole | SuperRole
