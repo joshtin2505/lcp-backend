@@ -1,7 +1,15 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import type { Request, Response } from 'express'
 import pool from '../db'
-import type { Id, OrdinalRole, User } from '../types/user.types.d'
+import bycript from 'bcryptjs'
+import createToken from '../middlewares/jwt'
+import type {
+  Id,
+  OrdinalRole,
+  User,
+  Users,
+  RequestLoginType
+} from '../types/user.types.d'
 import { roles } from '../constant/constantes'
 
 function usersRoutes(_req: Request, res: Response) {
@@ -17,22 +25,24 @@ function usersRoutes(_req: Request, res: Response) {
   })
 }
 function getAllUsers(_req: Request, res: Response) {
-  pool.query('SELECT * FROM users', (error, result) => {
-    if (error) {
-      res.status(404).json(error)
-      return
-    } else if (result.rowCount === 0) {
-      res.status(404).json({ message: 'No hay usuarios' })
-      return
+  pool.query(
+    'SELECT user_id, name, last_name, email, phone, phone_prefix FROM users',
+    (error, result) => {
+      if (error) {
+        res.status(404).json(error)
+        return
+      } else if (result.rowCount === 0) {
+        res.status(404).json({ message: 'No hay usuarios' })
+        return
+      }
+      res.status(200).json(result.rows)
     }
-    res.status(200).json(result.rows)
-  })
+  )
 }
 function getUserById(req: Request, res: Response) {
   const id = req.params.userId
-  console.log(id)
   pool.query(
-    'SELECT * FROM users WHERE user_id = $1',
+    'SELECT user_id, name, last_name, email, phone, phone_prefix FROM users WHERE user_id = $1',
     [id],
     (error, result) => {
       if (error) {
@@ -46,27 +56,29 @@ function getUserById(req: Request, res: Response) {
     }
   )
 }
-function addUser(req: Request, res: Response) {
-  const { name, email, lastName, password, role }: User = req.body
+async function addUser(req: Request, res: Response) {
+  const { name, email, last_name, password, role }: User = req.body
+  const passwordHash = await bycript.hash(password, 10)
   pool.query(
     `INSERT INTO users (name, lastName, email, password, role) 
     VALUES ($1, $2, $3, $4, $5)`,
-    [name, lastName, email, password, role],
+    [name, last_name, email, passwordHash, role],
     (error, result) => {
       if (error) {
         res.status(404).json(error)
       }
-      res.status(201).json(result.rows)
+      const data = result.rows as Users
+      res.status(201).json(data.map((user) => ({ ...user, password: '*****' })))
     }
   )
 }
 function addOrdinalUser(req: Request, res: Response) {
-  const { name, email, lastName, password } = req.body
+  const { name, email, last_name, password }: User = req.body
   const role: OrdinalRole = roles.user
   pool.query(
     `INSERT INTO users (name, lastName, email, password, role) 
     VALUES ($1, $2, $3, $4, $5)`,
-    [name, lastName, email, password, role],
+    [name, last_name, email, password, role],
     (error, result) => {
       if (error) {
         res.status(404).json(error)
@@ -79,20 +91,20 @@ function updateUser(req: Request, res: Response) {
   const {
     name,
     email,
-    lastName,
+    last_name,
     password,
     role,
     phone,
-    phonePrefix,
-    userId
+    phone_prefix,
+    user_id
   }: User = req.body
-  if (!userId) {
+  if (!user_id) {
     res.status(404).json({ message: 'Falta el id del usuario' })
     return
   }
   pool.query(
     `UPDATE users SET name = $1, lastName = $2, email = $3, password = $4, role = $5, phone = $6, phonePrefix = $7 WHERE user_id = $8`,
-    [name, lastName, email, password, role, phone, phonePrefix, userId],
+    [name, last_name, email, password, role, phone, phone_prefix, user_id],
     (error, result: any) => {
       if (result === undefined) {
         res.status(404).json(error)
@@ -111,6 +123,42 @@ function deleteUser(req: Request, res: Response) {
     res.status(201).json(result.rows)
   })
 }
+async function login(req: Request, res: Response) {
+  const { email, password }: RequestLoginType = req.body
+  const result = await pool.query(
+    'SELECT user_id, email, password, role FROM users WHERE email = $1',
+    [email]
+  )
+  if (!result) {
+    res
+      .status(404)
+      .json({ message: 'Error al buscar el usuario', error: result })
+    return
+  } else if (result.rowCount === 0) {
+    return res.status(404).json({ message: 'No hay usuarios con este email' })
+  }
+  const user = result.rows[0] as User
+
+  const passwordMatch = await bycript.compare(password, user.password)
+  if (!passwordMatch) {
+    return res.status(404).json({ message: 'Contraseña incorrecta' })
+  }
+  const token = await createToken(user.user_id)
+  if (!token) {
+    return res
+      .status(404)
+      .json({ message: 'Error al crear el token', error: token })
+  }
+  return res
+    .status(200)
+    .cookie('token', token)
+    .json({ message: 'Login exitoso' })
+
+  // )
+}
+function logout(_req: Request, res: Response) {
+  return res.clearCookie('token').sendStatus(200)
+}
 export {
   usersRoutes,
   getAllUsers,
@@ -118,5 +166,7 @@ export {
   addUser,
   updateUser,
   deleteUser,
-  addOrdinalUser
+  addOrdinalUser,
+  login,
+  logout
 }
