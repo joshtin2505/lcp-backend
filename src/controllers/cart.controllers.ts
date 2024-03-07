@@ -8,18 +8,21 @@ function cartRoutes(_req: Request, res: Response) {
     message: 'Cart Endpoints',
     entpoints: {
       all: '/cart/all',
-      getById: '/cart/:cartId',
       add: '/cart/add',
       update: '/cart/update',
       delete: '/cart/delete/:cartId'
     }
   })
 }
-function getAllItemsInCarts(req: Request, res: Response) {
-  // get Cart by user id
+function getAllItemsInCart(req: Request, res: Response) {
   const { userId } = req.body
   pool.query(
-    'SELECT * FROM cart WHERE user_id = $1 INNER JOIN cart_items ON cart.cart_id = cart_items.cart_id',
+    `SELECT products.* 
+    FROM cart 
+    INNER JOIN cart_items ON cart.cart_id = cart_items.cart_id
+    INNER JOIN products ON cart_items.product_id = products.product_id
+    WHERE user_id = $1 
+    `, // Test this query
     [userId],
     (error, result) => {
       if (error) {
@@ -57,19 +60,18 @@ function addItemToCart(req: Request, res: Response) {
 
 function modifyQuantityProduct(req: Request, res: Response) {
   const {
-    accion,
-    userId,
+    cartItmeId,
     productId,
     quantity
   }: {
-    accion: 'add' | 'remove'
-    userId: Id
+    cartItmeId: Id
     productId: Id
     quantity: Id
   } = req.body
+
   pool.query(
-    'UPDATE cart SET user_id = $1, product_id = $2, quantity = $3',
-    [userId, productId, quantity],
+    'UPDATE cart_items WHERE cart_itme_id = $1 SET product_id = $2, quantity = $3',
+    [cartItmeId, productId, quantity],
     (error, result) => {
       if (error) {
         res.status(404).json(error)
@@ -80,4 +82,25 @@ function modifyQuantityProduct(req: Request, res: Response) {
   )
 }
 
-export { cartRoutes, getAllItemsInCarts }
+function deleteItemFromCart(req: Request, res: Response) {
+  const { cartItemId } = req.params
+  pool.query(
+    'DELETE FROM cart_items WHERE cart_itme_id = $1',
+    [cartItemId],
+    (error, result) => {
+      if (error) {
+        res.status(404).json(error)
+        return
+      }
+      res.status(200).json(result)
+    }
+  )
+}
+
+export {
+  cartRoutes,
+  getAllItemsInCart,
+  addItemToCart,
+  modifyQuantityProduct,
+  deleteItemFromCart
+}
