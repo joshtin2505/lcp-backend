@@ -34,30 +34,35 @@ function getAllItemsInCarts(req: Request, res: Response) {
   )
 }
 
-// function addItemToCart(req: Request, res: Response) {
-//   const { }: {
-//     productId: Id
-//     quantity: Id
-//   } = req.body
-//   pool.query(
-//     'INSERT INTO cart_itmes () VALUES ($1, $2, $3)',
-//     [productId, quantity],
-//     (error, result) => {
-//       if (error) {
-//         res.status(404).json(error)
-//         return
-//       }
-//       res.status(201).json(result)
-//     }
-//   )
-// }
-
-function updateCart(req: Request, res: Response) {
+function addItemToCart(req: Request, res: Response) {
   const {
+    productId,
+    quantity
+  }: {
+    productId: Id
+    quantity: number
+  } = req.body
+  pool.query(
+    'INSERT INTO cart_itmes (product_id, quantity) VALUES ($1, $2)',
+    [productId, quantity],
+    (error, result) => {
+      if (error) {
+        res.status(404).json(error)
+        return
+      }
+      res.status(201).json(result)
+    }
+  )
+}
+
+function modifyQuantityProduct(req: Request, res: Response) {
+  const {
+    accion,
     userId,
     productId,
     quantity
   }: {
+    accion: 'add' | 'remove'
     userId: Id
     productId: Id
     quantity: Id
@@ -75,4 +80,4 @@ function updateCart(req: Request, res: Response) {
   )
 }
 
-export { cartRoutes, updateCart, getAllItemsInCarts }
+export { cartRoutes, getAllItemsInCarts }
