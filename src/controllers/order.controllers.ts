@@ -17,7 +17,7 @@ function orderRoutes(req: Request, res: Response) {
 }
 
 function getAllOrders(_req: Request, res: Response) {
-  pool.query('SELECT * FROM orders', (error, result) => {
+  pool.query(`SELECT * FROM orders`, (error, result) => {
     if (error) {
       res.status(404).json(error)
       return
@@ -32,7 +32,7 @@ function getAllOrders(_req: Request, res: Response) {
 function getOrderById(req: Request, res: Response) {
   const { orderId } = req.params
   pool.query(
-    'SELECT * FROM orders WHERE order_id = $1',
+    `SELECT * FROM orders WHERE order_id = $1`,
     [orderId],
     (error, result) => {
       if (error) {
