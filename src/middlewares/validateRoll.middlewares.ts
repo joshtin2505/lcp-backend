@@ -3,7 +3,7 @@ import { roles } from '../constant/constantes'
 
 interface RequestWithUser extends Request {
   user: {
-    roll: string | undefined
+    role: string | undefined
   }
 }
 
@@ -13,7 +13,7 @@ export const authMasterAdmin = (
   next: NextFunction
 ) => {
   const { user } = req as RequestWithUser
-  if (user.roll !== roles.masterAdmin) {
+  if (user.role !== roles.masterAdmin) {
     return res.status(403).json({ message: 'Forbidden' })
   }
   next()
@@ -22,7 +22,7 @@ export const authMasterAdmin = (
 
 export const authAdmin = (req: Request, res: Response, next: NextFunction) => {
   const { user } = req as RequestWithUser
-  if (user.roll !== roles.admin && user.roll !== roles.masterAdmin) {
+  if (user.role !== roles.admin && user.role !== roles.masterAdmin) {
     return res.status(403).json({ message: 'Forbidden' })
   }
   next()
@@ -32,9 +32,9 @@ export const authAdmin = (req: Request, res: Response, next: NextFunction) => {
 export const authUser = (req: Request, res: Response, next: NextFunction) => {
   const { user } = req as RequestWithUser
   if (
-    user.roll !== roles.admin &&
-    user.roll !== roles.masterAdmin &&
-    user.roll !== roles.user
+    user.role !== roles.admin &&
+    user.role !== roles.masterAdmin &&
+    user.role !== roles.user
   ) {
     return res.status(403).json({ message: 'Forbidden' })
   }
