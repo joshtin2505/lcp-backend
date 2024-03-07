@@ -9,20 +9,20 @@ type PhonePrefix = `+${number}`
 type Langs = 'en' | 'es' | 'fr'
 type Themes = 'dark' | 'light' | 'system'
 interface User {
-  userId?: Id
+  user_id?: Id
   name: Names
-  lastName: Names
+  last_name: Names
   email: Email
   password: string
   role: OrdinalRole | SuperRole
   phone?: number
-  phonePrefix?: PhonePrefix
+  phone_prefix?: PhonePrefix
   preferens?: {
     language: Langs
     theme: Themes
   }
 }
-
+type Users = User[]
 export type {
   Id,
   User,
@@ -32,5 +32,6 @@ export type {
   PhonePrefix,
   Langs,
   Themes,
+  Users,
   SuperRole
 }
