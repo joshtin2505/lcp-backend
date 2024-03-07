@@ -22,7 +22,8 @@ router.get('/', usersRoutes)
 router.post('/add', authMasterAdmin, addUser)
 
 // This routes is for admin and master admin
-router.get('/all', authAdmin, getAllUsers)
+// router.get('/all', authAdmin, getAllUsers)
+router.get('/all', getAllUsers)
 router.get('/:userId', authAdmin, getUserById)
 
 // This routes is for all users
