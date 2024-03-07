@@ -94,3 +94,5 @@ function updateOrder(req: Request, res: Response) {
     }
   )
 }
+
+export { orderRoutes, getAllOrders, getOrderById, addOrder, updateOrder }
