@@ -15,7 +15,7 @@ router.get('/', productCategoriesRoutes)
 router.get('/all', getAllProductCategories)
 router.get('/:categoryId', getProductCategoriesById)
 router.post('/add', authAdmin, addProductCategory)
-router.put('/update/:categoryId', authAdmin, updateProductCategory)
+router.put('/update/', authAdmin, updateProductCategory)
 router.delete('/delete/:categoryId', authAdmin, deleteProductCategory)
 
 export default router
