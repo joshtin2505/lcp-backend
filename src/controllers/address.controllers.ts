@@ -18,7 +18,9 @@ function addressRoutes(_req: Request, res: Response) {
 function getAllUserAddress(req: Request, res: Response) {
   const { userId } = req.body
   pool.query(
-    'SELECT * FROM address WHERE user_id = $1',
+    `SELECT country, city, address, state, zip_code 
+    FROM address 
+    WHERE user_id = $1`,
     [userId],
     (error, result) => {
       if (error) {
@@ -29,9 +31,12 @@ function getAllUserAddress(req: Request, res: Response) {
   )
 }
 function getUserAddress(req: Request, res: Response) {
-  const { userId, addressId } = req.body
+  const { addressId } = req.body
+  const userId = req.params.userId
   pool.query(
-    'SELECT * FROM address WHERE user_id = $1 AND address_id = $2',
+    `SELECT country, city, street_address, state, zip_code 
+    FROM address 
+    WHERE user_id = $1 AND address_id = $2`,
     [userId, addressId],
     (error, result) => {
       if (error) {
@@ -44,8 +49,8 @@ function getUserAddress(req: Request, res: Response) {
 function addAddress(req: Request, res: Response) {
   const { address, city, state, country, zipCode, userId } = req.body
   pool.query(
-    `INSERT INTO address (address, city, state, country, zip_code, user_id) 
-      VALUES ($1, $2, $3, $4, $5, $6)`,
+    `INSERT INTO address (street_address, city, state, country, zip_code, user_id) 
+    VALUES ($1, $2, $3, $4, $5, $6)`,
     [address, city, state, country, zipCode, userId],
     (error, result) => {
       if (result === undefined) {
@@ -56,10 +61,10 @@ function addAddress(req: Request, res: Response) {
   )
 }
 function updateUserAddress(req: Request, res: Response) {
-  const { address, city, state, country, zipCode, userId, addressId } = req.body
+  const { address, city, state, country, zipCode, addressId } = req.body
   pool.query(
-    `UPDATE address SET address = $1, city = $2, state = $3, country = $4, zip_code = $5 WHERE user_id = $6 AND address_id = $7`,
-    [address, city, state, country, zipCode, userId, addressId],
+    `UPDATE address SET street_address = $1, city = $2, state = $3, country = $4, zip_code = $5 WHERE address_id = $6`,
+    [address, city, state, country, zipCode, addressId],
     (error, result: any) => {
       if (error) {
         res.status(404).json(error)
@@ -71,7 +76,7 @@ function updateUserAddress(req: Request, res: Response) {
 function deleteUserAddress(req: Request, res: Response) {
   const { userId, addressId } = req.body
   pool.query(
-    'DELETE FROM address WHERE user_id = $1 AND address_id = $2',
+    `DELETE FROM address WHERE user_id = $1 AND address_id = $2`,
     [userId, addressId],
     (error, result) => {
       if (error) {
