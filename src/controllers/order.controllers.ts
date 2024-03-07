@@ -3,7 +3,7 @@ import type { Request, Response } from 'express'
 import pool from '../db'
 import type { Id } from '../types/user.types'
 
-function orderRoutes(req: Request, res: Response) {
+function orderRoutes(_req: Request, res: Response) {
   res.json({
     message: 'Order routes',
     routes: {
