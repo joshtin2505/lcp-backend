@@ -1,16 +1,13 @@
 CREATE TABLE address (
     address_id SERIAL PRIMARY KEY,
-    user_id SERIAL, -- FOREIGN KEY
-    country VARCHAR(100),
-    city VARCHAR(100),
-    address VARCHAR(150),
+    user_id INT NOT NULL, -- FOREIGN KEY
+
+    country VARCHAR(100) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    street_address VARCHAR(200) NOT NULL,
     state VARCHAR(100),
-    zip_code INT
+    zip_code VARCHAR(20),
+
+    -- address Foraneign Keys
+    CONSTRAINT fk_address_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
--- address Foraneign Keys
-ALTER TABLE address
-ADD CONSTRAINT "fk_user"
-FOREIGN KEY (user_id)
-REFERENCES users(user_id)
-ON UPDATE CASCADE
-ON DELETE CASCADE; 
