@@ -15,7 +15,19 @@ function addressRoutes(_req: Request, res: Response) {
   })
 }
 
-function getAllUserAddress(req: Request, res: Response) {
+function getAllUserAddress(_req: Request, res: Response) {
+  pool.query(
+    `SELECT country, city, address, state, zip_code,  user_id 
+    FROM address`,
+    (error, result) => {
+      if (error) {
+        res.status(404).json(error)
+      }
+      res.status(200).json(result?.rows)
+    }
+  )
+}
+function getAllAddressByUser(req: Request, res: Response) {
   const { userId } = req.body
   pool.query(
     `SELECT country, city, address, state, zip_code 
@@ -30,9 +42,9 @@ function getAllUserAddress(req: Request, res: Response) {
     }
   )
 }
-function getUserAddress(req: Request, res: Response) {
-  const { addressId } = req.body
-  const userId = req.params.userId
+function getUserAddressById(req: Request, res: Response) {
+  const { userId } = req.body
+  const addressId = req.params.addressId
   pool.query(
     `SELECT country, city, street_address, state, zip_code 
     FROM address 
@@ -96,8 +108,9 @@ function deleteUserAddress(req: Request, res: Response) {
 export {
   addAddress,
   updateUserAddress,
-  getUserAddress,
+  getUserAddressById,
   deleteUserAddress,
-  getAllUserAddress,
-  addressRoutes
+  getAllAddressByUser,
+  addressRoutes,
+  getAllUserAddress
 }
