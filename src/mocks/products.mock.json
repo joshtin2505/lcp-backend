@@ -1,0 +1,49 @@
+{
+    "products": [
+        {
+            "id": 1,
+            "name": "Producto 1",
+            "price": 10.99,
+            "description": "Descripción del producto 1",
+            "stock": 10,
+            "img_url": "https://example.com/product1.jpg",
+            "category_id": 1
+        },
+        {
+            "id": 2,
+            "name": "Producto 2",
+            "price": 19.99,
+            "description": "Descripción del producto 2",
+            "stock": 5,
+            "img_url": "https://example.com/product2.jpg",
+            "category_id": 2
+        },
+        {
+            "id": 3,
+            "name": "Producto 3",
+            "price": 7.99,
+            "description": "Descripción del producto 3",
+            "stock": 8,
+            "img_url": "https://example.com/product3.jpg",
+            "category_id": 1
+        },
+        {
+            "id": 4,
+            "name": "Producto 4",
+            "price": 14.99,
+            "description": "Descripción del producto 4",
+            "stock": 3,
+            "img_url": "https://example.com/product4.jpg",
+            "category_id": 2
+        },
+        {
+            "id": 5,
+            "name": "Producto 5",
+            "price": 5.99,
+            "description": "Descripción del producto 5",
+            "stock": 12,
+            "img_url": "https://example.com/product5.jpg",
+            "category_id": 1
+        }
+    ]
+}
