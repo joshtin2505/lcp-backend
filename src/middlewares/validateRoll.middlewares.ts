@@ -1,43 +1,41 @@
-import type { Request, Response, NextFunction } from 'express'
+import type { Response, NextFunction } from 'express'
 import { roles } from '../constant/constantes'
+import type { ExtendedRequest, userToken } from '../types/user.types'
 
-interface RequestWithUser extends Request {
-  user: {
-    role: string | undefined
-  }
+type RoleCheck = (user: userToken | undefined) => boolean
+
+const checkRole = (
+  // This function is for check if the user exist and has a role
+  user: userToken | undefined,
+  rolesToCheck: string[]
+): boolean => {
+  return user !== undefined && rolesToCheck.includes(user.role)
 }
 
-export const authMasterAdmin = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { user } = req as RequestWithUser
-  if (user.role !== roles.masterAdmin) {
-    return res.status(403).json({ message: 'Forbidden' })
+function createRoleMiddleware(roleCheck: RoleCheck) {
+  // This function is for create the middleware with the role check
+  return (req: ExtendedRequest, res: Response, next: NextFunction) => {
+    const { user } = req
+    if (!roleCheck(user)) {
+      // If the user doesn't have the role, return an error
+      res.status(403).json({ message: 'Forbidden' })
+    }
+    next()
   }
-  next()
-  return res.status(204).json({ message: 'Auth' }) // This line is not necessary but it's a good practice to have it
+}
+const MasterAdmin = createRoleMiddleware((user) =>
+  checkRole(user, [roles.masterAdmin])
+)
+const Admin = createRoleMiddleware((user) =>
+  checkRole(user, [roles.masterAdmin, roles.admin])
+)
+const User = createRoleMiddleware((user) =>
+  checkRole(user, [roles.masterAdmin, roles.admin, roles.user])
+)
+const validateRoll = {
+  MasterAdmin,
+  Admin,
+  User
 }
 
-export const authAdmin = (req: Request, res: Response, next: NextFunction) => {
-  const { user } = req as RequestWithUser
-  if (user.role !== roles.admin && user.role !== roles.masterAdmin) {
-    return res.status(403).json({ message: 'Forbidden' })
-  }
-  next()
-  return res.status(204).json({ message: 'Auth' }) // This line is not necessary but it's a good practice to have it
-}
-
-export const authUser = (req: Request, res: Response, next: NextFunction) => {
-  const { user } = req as RequestWithUser
-  if (
-    user.role !== roles.admin &&
-    user.role !== roles.masterAdmin &&
-    user.role !== roles.user
-  ) {
-    return res.status(403).json({ message: 'Forbidden' })
-  }
-  next()
-  return res.status(204).json({ message: 'Auth' }) // This line is not necessary but it's a good practice to have it
-}
+export default validateRoll
