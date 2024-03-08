@@ -15,12 +15,16 @@ const checkRole = (
 function createRoleMiddleware(roleCheck: RoleCheck) {
   // This function is for create the middleware with the role check
   return (req: ExtendedRequest, res: Response, next: NextFunction) => {
-    const { user } = req
-    if (!roleCheck(user)) {
-      // If the user doesn't have the role, return an error
-      res.status(403).json({ message: 'Forbidden' })
+    try {
+      const { user } = req
+      if (!roleCheck(user)) {
+        // If the user doesn't have the role, return an error
+        res.status(403).json({ message: 'Forbidden' })
+      }
+      next()
+    } catch (error) {
+      console.log(error)
     }
-    next()
   }
 }
 const MasterAdmin = createRoleMiddleware((user) =>
