@@ -7,15 +7,17 @@ import {
   payMethodRoutes,
   updatePayMethod
 } from '../controllers/paymethod.controllers'
-import { authUser } from '../middlewares/validateRoll.middlewares'
+import validateRoll from '../middlewares/validateRoll.middlewares'
+
+const { User } = validateRoll
 
 const router = Router()
 
 router.get('/', payMethodRoutes)
-router.get('/all', authUser, getAllPayMethods)
-router.get('/:payMethodId', authUser, getPayMethodById)
-router.post('/add', authUser, addPayMethod)
-router.put('/update/', authUser, updatePayMethod)
-router.delete('/delete/:payMethodId', authUser, deletePayMethod)
+router.get('/all', User, getAllPayMethods)
+router.get('/:payMethodId', User, getPayMethodById)
+router.post('/add', User, addPayMethod)
+router.put('/update/', User, updatePayMethod)
+router.delete('/delete/:payMethodId', User, deletePayMethod)
 
 export default router

@@ -8,18 +8,20 @@ import {
   getAllUserAddress,
   getUserAddressById
 } from '../controllers/address.controllers'
-import { authAdmin, authUser } from '../middlewares/validateRoll.middlewares'
+import validateRoll from '../middlewares/validateRoll.middlewares'
+
+const { Admin, User } = validateRoll
 
 const router = Router()
 
 router.get('/', addressRoutes)
 
-router.get('/all-address', authAdmin, getAllUserAddress)
+router.get('/all-address', Admin, getAllUserAddress)
 
-router.get('/all', authUser, getAllAddressByUser)
-router.get('/:addressId', authUser, getUserAddressById)
-router.post('/add', authUser, addAddress)
-router.delete('/delete/:addressId', authUser, deleteUserAddress)
-router.put('/update', authUser, updateUserAddress)
+router.get('/all', User, getAllAddressByUser)
+router.get('/:addressId', User, getUserAddressById)
+router.post('/add', User, addAddress)
+router.delete('/delete/:addressId', User, deleteUserAddress)
+router.put('/update', User, updateUserAddress)
 
 export default router
