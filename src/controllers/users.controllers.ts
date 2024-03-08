@@ -2,7 +2,7 @@
 import type { Request, Response } from 'express'
 import pool from '../db'
 import bycript from 'bcryptjs'
-import createToken from '../middlewares/jwt'
+import createToken from '../libs/jwt'
 import type {
   Id,
   OrdinalRole,
@@ -130,25 +130,31 @@ async function login(req: Request, res: Response) {
     [email]
   )
   if (!result) {
-    res
+    // Error al buscar el usuario
+    return res
       .status(404)
       .json({ message: 'Error al buscar el usuario', error: result })
-    return
   } else if (result.rowCount === 0) {
+    // No hay usuarios con este email
     return res.status(404).json({ message: 'No hay usuarios con este email' })
   }
+  // Encaso de que el usuario exista
   const user = result.rows[0] as User
 
   const passwordMatch = await bycript.compare(password, user.password)
   if (!passwordMatch) {
+    // Contraseña incorrecta
     return res.status(404).json({ message: 'Contraseña incorrecta' })
   }
-  const token = await createToken(user.user_id)
+  // Crear token
+  const token = await createToken({ id: user.user_id, role: user.role })
   if (!token) {
+    // Error al crear el token
     return res
       .status(404)
       .json({ message: 'Error al crear el token', error: token })
   }
+  // Login exitoso
   return res
     .status(200)
     .cookie('token', token)
