@@ -159,11 +159,11 @@ async function login(req: Request, res: Response) {
     .status(200)
     .cookie('token', token)
     .json({ message: 'Login exitoso' })
-
-  // )
 }
 function logout(_req: Request, res: Response) {
-  return res.clearCookie('token').sendStatus(200)
+  return res
+    .cookie('token', '', { expires: new Date(0), httpOnly: true, secure: true })
+    .json({ message: 'Logout exitoso' })
 }
 export {
   usersRoutes,
