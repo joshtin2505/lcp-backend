@@ -11,31 +11,30 @@ import {
   login,
   logout
 } from '../controllers/users.controllers'
-import {
-  authMasterAdmin,
-  authUser,
-  authAdmin
-} from '../middlewares/validateRoll.middlewares'
+import { validateToken } from '../middlewares/validateToken.middlewares'
+import validateRoll from '../middlewares/validateRoll.middlewares'
+
+const { MasterAdmin, Admin, User } = validateRoll
 
 const router = Router()
 
 router.get('/', usersRoutes)
 
 // This routes is for master admin
-router.post('/add', authMasterAdmin, addUser)
+router.post('/add', validateToken, MasterAdmin, addUser)
 
 // This routes is for admin and master admin
-// router.get('/all', authAdmin, getAllUsers)
-router.get('/all', getAllUsers)
-router.get('/:userId', authAdmin, getUserById)
+router.get('/all', validateToken, Admin, getAllUsers)
+// router.get('/all', getAllUsers)
+router.get('/:userId', validateToken, Admin, getUserById)
 
 // This routes is for all users
-router.delete('/delete/:userId', authUser, deleteUser)
-router.put('/update', authUser, updateUser)
-router.post('/logout', authUser, logout)
+router.delete('/delete/:userId', validateToken, User, deleteUser)
+router.put('/update', validateToken, User, updateUser)
+router.post('/logout', validateToken, User, logout) // ✅
 
 // This route is for no auth users
 router.post('/add-ordinal', addOrdinalUser)
-router.post('/login', login)
+router.post('/login', login) // ✅
 
 export default router
