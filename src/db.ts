@@ -13,7 +13,7 @@ const pool = new Pool({
   //   'postgres://casitadepapel:5t2eOI4chqjCQ2quTUHmvFmSN89AGT3J@dpg-cnjntc21hbls73dqroi0-a.oregon-postgres.render.com/casitadepapel?sslmode=require'
 })
 
-export function dbConect(PORT: number) {
+export function dbConect(PORT: number | string) {
   pool
     .connect()
     .then((client) => {

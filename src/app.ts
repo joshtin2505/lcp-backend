@@ -32,5 +32,5 @@ app.use(function (_req, res, _next) {
   })
 })
 
-export const PORT = 3000
+export const LOCAL_PORT = 3000
 export default app
