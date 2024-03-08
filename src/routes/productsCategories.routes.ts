@@ -7,15 +7,17 @@ import {
   productCategoriesRoutes,
   updateProductCategory
 } from '../controllers/productCategories.controllers'
-import { authAdmin } from '../middlewares/validateRoll.middlewares'
+import validateRoll from '../middlewares/validateRoll.middlewares'
+
+const { Admin } = validateRoll
 
 const router = Router()
 
 router.get('/', productCategoriesRoutes)
 router.get('/all', getAllProductCategories)
 router.get('/:categoryId', getProductCategoriesById)
-router.post('/add', authAdmin, addProductCategory)
-router.put('/update/', authAdmin, updateProductCategory)
-router.delete('/delete/:categoryId', authAdmin, deleteProductCategory)
+router.post('/add', Admin, addProductCategory)
+router.put('/update/', Admin, updateProductCategory)
+router.delete('/delete/:categoryId', Admin, deleteProductCategory)
 
 export default router
