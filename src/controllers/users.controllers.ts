@@ -10,7 +10,12 @@ import type {
   // Users,
   RequestLoginType
 } from '../types/user.types.d'
-import { roles } from '../constant/constantes'
+import {
+  roles,
+  tokenErrors,
+  userErrors,
+  userSuccess
+} from '../constant/constantes'
 
 function usersRoutes(_req: Request, res: Response) {
   res.json({
@@ -133,10 +138,10 @@ async function login(req: Request, res: Response) {
     // Error al buscar el usuario
     return res
       .status(404)
-      .json({ message: 'Error al buscar el usuario', error: result })
+      .json({ message: userErrors.USER_NOT_FOUND, error: result })
   } else if (result.rowCount === 0) {
     // No hay usuarios con este email
-    return res.status(404).json({ message: 'No hay usuarios con este email' })
+    return res.status(401).json({ message: userErrors.EMAIL_NOT_FOUND })
   }
   // Encaso de que el usuario exista
   const user = result.rows[0] as User
@@ -144,26 +149,26 @@ async function login(req: Request, res: Response) {
   const passwordMatch = await bycript.compare(password, user.password)
   if (!passwordMatch) {
     // Contraseña incorrecta
-    return res.status(404).json({ message: 'Contraseña incorrecta' })
+    return res.status(401).json({ message: userErrors.INCORRECT_PASSWORD })
   }
   // Crear token
   const token = await createToken({ id: user.user_id, role: user.role })
   if (!token) {
     // Error al crear el token
     return res
-      .status(404)
-      .json({ message: 'Error al crear el token', error: token })
+      .status(401)
+      .json({ message: tokenErrors.TOKEN_NOT_CREATED, error: token })
   }
   // Login exitoso
   return res
     .status(200)
     .cookie('token', token)
-    .json({ message: 'Login exitoso' })
+    .json({ message: userSuccess.USER_LOGGED })
 }
 function logout(_req: Request, res: Response) {
   return res
     .cookie('token', '', { expires: new Date(0), httpOnly: true, secure: true })
-    .json({ message: 'Logout exitoso' })
+    .json({ message: userSuccess.USER_LOGOUT })
 }
 export {
   usersRoutes,
