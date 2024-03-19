@@ -138,10 +138,10 @@ async function login(req: Request, res: Response) {
     // Error al buscar el usuario
     return res
       .status(404)
-      .json({ message: userErrors.USER_NOT_FOUND, error: result })
+      .json({ ERR: userErrors.USER_NOT_FOUND, error: result })
   } else if (result.rowCount === 0) {
     // No hay usuarios con este email
-    return res.status(401).json({ message: userErrors.EMAIL_NOT_FOUND })
+    return res.status(401).json({ ERR: userErrors.EMAIL_NOT_FOUND })
   }
   // Encaso de que el usuario exista
   const user = result.rows[0] as User
@@ -149,7 +149,7 @@ async function login(req: Request, res: Response) {
   const passwordMatch = await bycript.compare(password, user.password)
   if (!passwordMatch) {
     // Contraseña incorrecta
-    return res.status(401).json({ message: userErrors.INCORRECT_PASSWORD })
+    return res.status(401).json({ ERR: userErrors.INCORRECT_PASSWORD })
   }
   // Crear token
   const token = await createToken({ id: user.user_id, role: user.role })
@@ -157,7 +157,7 @@ async function login(req: Request, res: Response) {
     // Error al crear el token
     return res
       .status(401)
-      .json({ message: tokenErrors.TOKEN_NOT_CREATED, error: token })
+      .json({ ERR: tokenErrors.TOKEN_NOT_CREATED, error: token })
   }
   // Login exitoso
   return res
