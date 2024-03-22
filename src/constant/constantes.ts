@@ -24,7 +24,7 @@ export enum tokenErrors {
   TOKEN_INVALID = 'TOKEN_INVALID',
   TOKEN_NOT_CREATED = 'TOKEN_NOT_CREATED'
 }
-export enum dataBaseErros {
+export enum dataBaseErrors {
   DATABASE_ERROR = 'DATABASE_ERROR',
   DATABASE_QUERY_ERROR = 'DATABASE_QUERY_ERROR',
   DATABASE_NOT_FOUND = 'DATABASE_NOT_FOUND',

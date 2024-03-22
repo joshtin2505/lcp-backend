@@ -11,7 +11,7 @@ import type {
   RequestLoginType
 } from '../types/user.types.d'
 import {
-  dataBaseErros,
+  dataBaseErrors,
   roles,
   tokenErrors,
   userErrors,
@@ -139,7 +139,7 @@ async function login(req: Request, res: Response) {
     // Error al buscar el usuario
     return res
       .status(404)
-      .json({ message: dataBaseErros.DATABASE_QUERY_ERROR, error: result })
+      .json({ message: dataBaseErrors.DATABASE_QUERY_ERROR, error: result })
   } else if (result.rowCount === 0) {
     // No hay usuarios con este email
     return res.status(401).json({ message: userErrors.EMAIL_NOT_FOUND })
