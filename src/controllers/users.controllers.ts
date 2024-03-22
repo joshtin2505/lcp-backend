@@ -156,7 +156,7 @@ async function login(req: Request, res: Response) {
   if (!token) {
     // Error al crear el token
     return res
-      .status(401)
+      .status(500)
       .json({ message: tokenErrors.TOKEN_NOT_CREATED, error: token })
   }
   // Login exitoso
