@@ -10,7 +10,8 @@ app.use(cors({
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Accept']
-  ))
+    })
+)
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(cookieParser())
