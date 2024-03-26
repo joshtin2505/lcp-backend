@@ -11,14 +11,14 @@ type PhonePrefix = `+${number}`
 type Langs = 'en' | 'es' | 'fr'
 type Themes = 'dark' | 'light' | 'system'
 interface User {
-  user_id?: Id
+  userId?: Id
   name: Names
-  last_name?: Names
+  lastName?: Names
   email: Email
   password: string
   role: Roles
   phone?: number
-  phone_prefix?: PhonePrefix
+  phonePrefix?: PhonePrefix
   preferens?: {
     language: Langs
     theme: Themes
@@ -56,5 +56,6 @@ export type {
   RequestLoginType,
   userToken,
   ExtendedRequest,
-  userDecodetToken
+  userDecodetToken,
+  Roles
 }
