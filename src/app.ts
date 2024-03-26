@@ -6,12 +6,13 @@ import usersRoutes from './routes/users.routes'
 const app = express()
 
 // Middlewares
-app.use(cors({
+app.use(
+  cors({
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Accept'],
     credentials: true
-    })
+  })
 )
 app.use(morgan('dev'))
 app.use(express.json())
