@@ -2,13 +2,14 @@
 import type { Request, Response } from 'express'
 import pool from '../db'
 import bycript from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import createToken from '../libs/jwt'
 import type {
   Id,
   OrdinalRole,
   User,
-  // Users,
-  RequestLoginType
+  RequestLoginType,
+  Roles
 } from '../types/user.types.d'
 import {
   dataBaseErrors,
@@ -17,6 +18,7 @@ import {
   userErrors,
   userSuccess
 } from '../constant/constantes'
+import { TOKEN_SECRET_KEY } from '../config'
 
 function usersRoutes(_req: Request, res: Response) {
   res.json({
@@ -63,13 +65,13 @@ function getUserById(req: Request, res: Response) {
   )
 }
 async function addUser(req: Request, res: Response) {
-  const { name, email, last_name, password, role }: User = req.body
+  const { name, email, lastName, password, role }: User = req.body
   try {
     const passwordHash = await bycript.hash(password, 10)
     const result = await pool.query(
       `INSERT INTO users (name, last_name, email, password, role) 
     VALUES ($1, $2, $3, $4, $5)`,
-      [name, last_name, email, passwordHash, role]
+      [name, lastName, email, passwordHash, role]
     )
     console.log(result)
     return res.status(201).json({ message: 'Usuario creado' })
@@ -79,12 +81,12 @@ async function addUser(req: Request, res: Response) {
   }
 }
 function addOrdinalUser(req: Request, res: Response) {
-  const { name, email, last_name, password }: User = req.body
+  const { name, email, lastName, password }: User = req.body
   const role: OrdinalRole = roles.user
   pool.query(
     `INSERT INTO users (name, last_name, email, password, role) 
     VALUES ($1, $2, $3, $4, $5)`,
-    [name, last_name, email, password, role],
+    [name, lastName, email, password, role],
     (error, result) => {
       if (error) {
         res.status(404).json(error)
@@ -97,20 +99,20 @@ function updateUser(req: Request, res: Response) {
   const {
     name,
     email,
-    last_name,
+    lastName,
     password,
     role,
     phone,
-    phone_prefix,
-    user_id
+    phonePrefix,
+    userId
   }: User = req.body
-  if (!user_id) {
+  if (!userId) {
     res.status(404).json({ message: 'Falta el id del usuario' })
     return
   }
   pool.query(
     `UPDATE users SET name = $1, last_name = $2, email = $3, password = $4, role = $5, phone = $6, phonePrefix = $7 WHERE user_id = $8`,
-    [name, last_name, email, password, role, phone, phone_prefix, user_id],
+    [name, lastName, email, password, role, phone, phonePrefix, userId],
     (error, result: any) => {
       if (result === undefined) {
         res.status(404).json(error)
@@ -121,7 +123,7 @@ function updateUser(req: Request, res: Response) {
 }
 function deleteUser(req: Request, res: Response) {
   const id: Id = parseInt(req.params.userId)
-  pool.query('DELETE FROM users WHERE user_id = $1', [id], (error, result) => {
+  pool.query(`DELETE FROM users WHERE user_id = $1`, [id], (error, result) => {
     if (error) {
       res.status(404).json(error)
       return
@@ -132,7 +134,7 @@ function deleteUser(req: Request, res: Response) {
 async function login(req: Request, res: Response) {
   const { email, password }: RequestLoginType = req.body
   const result = await pool.query(
-    'SELECT user_id, email, password, role FROM users WHERE email = $1',
+    `SELECT user_id, email, password, role FROM users WHERE email = $1`,
     [email]
   )
   if (!result) {
@@ -153,7 +155,7 @@ async function login(req: Request, res: Response) {
     return res.status(401).json({ message: userErrors.INCORRECT_PASSWORD })
   }
   // Crear token
-  const token = await createToken({ id: user.user_id, role: user.role })
+  const token = await createToken({ id: user.userId, role: user.role })
   if (!token) {
     // Error al crear el token
     return res
@@ -171,6 +173,39 @@ function logout(_req: Request, res: Response) {
     .cookie('token', '', { expires: new Date(0), httpOnly: true, secure: true })
     .json({ message: userSuccess.USER_LOGOUT })
 }
+function verifyToken(req: Request, res: Response) {
+  const { token } = req.cookies
+  if (!token) res.status(401).json({ message: tokenErrors.TOKEN_NOT_FOUND })
+  jwt.verify(token as string, TOKEN_SECRET_KEY, (err, user) => {
+    if (err) {
+      res
+        .status(500)
+        .json({ message: tokenErrors.TOKEN_NOT_VERIFIED, error: err })
+    }
+    interface TokenPayload {
+      // take out the interface TokenPayload
+      id: Id
+      role: Roles
+    }
+    const { id, role } = user as TokenPayload
+    pool.query(
+      `SELECT user_id  FROM users WHERE user_id = $1`,
+      [id],
+      (error, result) => {
+        if (error) {
+          res
+            .status(500)
+            .json({ messaje: tokenErrors.TOKEN_NOT_VERIFIED, error })
+        } else if (result.rowCount === 0) {
+          res.status(401).json({ message: userErrors.USER_NOT_FOUND })
+        }
+        res
+          .status(200)
+          .json({ message: userSuccess.USER_VERIFIED, user: { id, role } })
+      }
+    )
+  })
+}
 export {
   usersRoutes,
   getAllUsers,
@@ -180,5 +215,6 @@ export {
   deleteUser,
   addOrdinalUser,
   login,
-  logout
+  logout,
+  verifyToken
 }

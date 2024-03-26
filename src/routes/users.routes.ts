@@ -9,7 +9,8 @@ import {
   updateUser,
   deleteUser,
   login,
-  logout
+  logout,
+  verifyToken
 } from '../controllers/users.controllers'
 import { validateToken } from '../middlewares/validateToken.middlewares'
 import validateRoll from '../middlewares/validateRoll.middlewares'
@@ -36,5 +37,7 @@ router.post('/logout', validateToken, User, logout) // ✅
 // This route is for no auth users
 router.post('/add-ordinal', addOrdinalUser)
 router.post('/login', login) // ✅
+
+router.get('/verify', verifyToken)
 
 export default router
