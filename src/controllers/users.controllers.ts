@@ -133,6 +133,7 @@ function deleteUser(req: Request, res: Response) {
 }
 async function login(req: Request, res: Response) {
   const { email, password }: RequestLoginType = req.body
+  console.log(req.body)
   const result = await pool.query(
     `SELECT user_id, email, password, role FROM users WHERE email = $1`,
     [email]
