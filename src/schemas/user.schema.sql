@@ -1,4 +1,4 @@
-CREATE TABLE users (
+CREATE TABLE user (
     user_id SERIAL PRIMARY KEY,
     name VARCHAR(40) NOT NULL,
     last_name VARCHAR(60),
@@ -6,7 +6,7 @@ CREATE TABLE users (
     password TEXT NOT NULL,    
     phone INT,
     phone_prefix INT,
-    role VARCHAR(20) DEFAULT 'user' NOT NULL CHECK (role IN ('masterAdmin', 'admin', 'user')),
+    role VARCHAR(20) DEFAULT 'client' NOT NULL CHECK (role IN ('masterAdmin', 'admin', 'client')),
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
