@@ -4,13 +4,7 @@ import pool from '../db'
 import bycript from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import createToken from '../libs/jwt'
-import type {
-  Id,
-  OrdinalRole,
-  User,
-  RequestLoginType,
-  Roles
-} from '../types/user.types.d'
+import type { Id, User, RequestLoginType, Roles } from '../types/user.types.d'
 import {
   dataBaseErrors,
   roles,
@@ -19,6 +13,7 @@ import {
   userSuccess
 } from '../constant/constantes'
 import { TOKEN_SECRET_KEY } from '../config'
+import type { PostgresErrors } from '../types/postgresErrors.type.d'
 
 function usersRoutes(_req: Request, res: Response) {
   res.json({
@@ -34,7 +29,7 @@ function usersRoutes(_req: Request, res: Response) {
 }
 function getAllUsers(_req: Request, res: Response) {
   pool.query(
-    'SELECT user_id, name, last_name, email, phone, phone_prefix FROM users;',
+    'SELECT user_id, name, last_name, email, phone, phone_prefix FROM user;',
     (error, result) => {
       if (error) {
         res.status(404).json(error)
@@ -50,7 +45,7 @@ function getAllUsers(_req: Request, res: Response) {
 function getUserById(req: Request, res: Response) {
   const id = req.params.userId
   pool.query(
-    'SELECT user_id, name, last_name, email, phone, phone_prefix FROM users WHERE user_id = $1',
+    'SELECT user_id, name, last_name, email, phone, phone_prefix FROM user WHERE user_id = $1',
     [id],
     (error, result) => {
       if (error) {
@@ -82,17 +77,23 @@ async function addUser(req: Request, res: Response) {
 }
 function addOrdinalUser(req: Request, res: Response) {
   const { name, email, lastName, password }: User = req.body
-  const role: OrdinalRole = roles.user
+  const role = roles.client
+  console.log([name, lastName, email, password, role])
   pool.query(
-    `INSERT INTO users (name, last_name, email, password, role) 
+    `INSERT INTO user (name, last_name, email, password, role) 
     VALUES ($1, $2, $3, $4, $5)`,
     [name, lastName, email, password, role],
-    (error, result) => {
+    (error: any, result) => {
       if (error) {
-        res.status(404).json(error)
+        const err = error as PostgresErrors
+        res
+          .status(500)
+          .json({ message: userErrors.ERROR_TO_CREATE_USER, error: err }) // corregir
+        return
       }
       res.status(201).json(result.rows)
     }
+    // hacer validaciones para los errores
   )
 }
 function updateUser(req: Request, res: Response) {
@@ -111,7 +112,7 @@ function updateUser(req: Request, res: Response) {
     return
   }
   pool.query(
-    `UPDATE users SET name = $1, last_name = $2, email = $3, password = $4, role = $5, phone = $6, phonePrefix = $7 WHERE user_id = $8`,
+    `UPDATE user SET name = $1, last_name = $2, email = $3, password = $4, role = $5, phone = $6, phonePrefix = $7 WHERE user_id = $8`,
     [name, lastName, email, password, role, phone, phonePrefix, userId],
     (error, result: any) => {
       if (result === undefined) {
@@ -123,7 +124,7 @@ function updateUser(req: Request, res: Response) {
 }
 function deleteUser(req: Request, res: Response) {
   const id: Id = parseInt(req.params.userId)
-  pool.query(`DELETE FROM users WHERE user_id = $1`, [id], (error, result) => {
+  pool.query(`DELETE FROM user WHERE user_id = $1`, [id], (error, result) => {
     if (error) {
       res.status(404).json(error)
       return
@@ -135,7 +136,7 @@ async function login(req: Request, res: Response) {
   const { email, password }: RequestLoginType = req.body
   console.log(req.body)
   const result = await pool.query(
-    `SELECT user_id, email, password, role FROM users WHERE email = $1`,
+    `SELECT user_id, email, password, role FROM user WHERE email = $1`,
     [email]
   )
   if (!result) {
@@ -190,7 +191,7 @@ function verifyToken(req: Request, res: Response) {
     }
     const { id, role } = user as TokenPayload
     pool.query(
-      `SELECT user_id  FROM users WHERE user_id = $1`,
+      `SELECT user_id  FROM user WHERE user_id = $1`,
       [id],
       (error, result) => {
         if (error) {
