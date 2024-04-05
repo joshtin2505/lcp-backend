@@ -180,9 +180,7 @@ function verifyToken(req: Request, res: Response) {
   if (!token) res.status(401).json({ message: tokenErrors.TOKEN_NOT_FOUND })
   jwt.verify(token as string, TOKEN_SECRET_KEY, (err, user) => {
     if (err) {
-      res
-        .status(500)
-        .json({ message: tokenErrors.TOKEN_NOT_VERIFIED, error: err })
+      res.status(500).json({ message: tokenErrors.TOKEN_ERROR, error: err })
     }
     interface TokenPayload {
       // take out the interface TokenPayload
@@ -197,7 +195,7 @@ function verifyToken(req: Request, res: Response) {
         if (error) {
           res
             .status(500)
-            .json({ messaje: tokenErrors.TOKEN_NOT_VERIFIED, error })
+            .json({ messaje: dataBaseErrors.DATABASE_ERROR, error })
         } else if (result.rowCount === 0) {
           res.status(401).json({ message: userErrors.USER_NOT_FOUND })
         }
