@@ -1,5 +1,5 @@
 export enum roles {
-  user = 'user',
+  client = 'client',
   masterAdmin = 'masterAdmin',
   admin = 'admin'
 }
@@ -8,7 +8,8 @@ export enum userErrors {
   INCORRECT_PASSWORD = 'INCORRECT_PASSWORD',
   USER_NOT_FOUND = 'USER_NOT_FOUND',
   USER_ALREADY_EXISTS = 'USER_ALREADY_EXISTS',
-  USER_UNAUTHORIZED = 'USER_UNAUTHORIZED'
+  USER_UNAUTHORIZED = 'USER_UNAUTHORIZED',
+  ERROR_TO_CREATE_USER = 'ERROR_TO_CREATE_USER'
 }
 export enum userSuccess {
   USER_CREATED = 'USER_CREATED',
@@ -30,5 +31,6 @@ export enum dataBaseErrors {
   DATABASE_ERROR = 'DATABASE_ERROR',
   DATABASE_QUERY_ERROR = 'DATABASE_QUERY_ERROR',
   DATABASE_NOT_FOUND = 'DATABASE_NOT_FOUND',
-  DATABASE_DUPLICATE = 'DATABASE_DUPLICATE'
+  DATABASE_DUPLICATE = 'DATABASE_DUPLICATE',
+  users_role_check = 'users_role_check'
 }
