@@ -17,6 +17,7 @@ function createRoleMiddleware(roleCheck: RoleCheck) {
   return (req: ExtendedRequest, res: Response, next: NextFunction) => {
     try {
       const { user } = req
+
       if (!roleCheck(user)) {
         // If the user doesn't have the role, return an error
         res.status(403).json({ message: 'Forbidden' })
@@ -34,7 +35,7 @@ const Admin = createRoleMiddleware((user) =>
   checkRole(user, [roles.masterAdmin, roles.admin])
 )
 const User = createRoleMiddleware((user) =>
-  checkRole(user, [roles.masterAdmin, roles.admin, roles.user])
+  checkRole(user, [roles.masterAdmin, roles.admin, roles.client])
 )
 const validateRoll = {
   MasterAdmin,
