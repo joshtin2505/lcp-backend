@@ -1,5 +1,5 @@
 CREATE TABLE usuario (
-    user_id SERIAL PRIMARY KEY,
+    user_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     name VARCHAR(40) NOT NULL,
     last_name VARCHAR(60),
     email TEXT NOT NULL UNIQUE,

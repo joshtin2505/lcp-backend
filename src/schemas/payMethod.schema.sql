@@ -1,7 +1,7 @@
 CREATE TABLE paymethod (
-    paymethod_id SERIAL PRIMARY KEY,
+    paymethod_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     method_name VARCHAR(100),
-    user_id SERIAL, -- FOREIGN KEY
+    user_id UUID, -- FOREIGN KEY
     cart_number VARCHAR(16),
     expiration_date DATE,
     cvv INT,

@@ -1,6 +1,6 @@
 CREATE TABLE address (
-    address_id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL, -- FOREIGN KEY
+    address_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID NOT NULL, -- FOREIGN KEY
 
     country VARCHAR(100) NOT NULL,
     city VARCHAR(100) NOT NULL,

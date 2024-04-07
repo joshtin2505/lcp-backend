@@ -1,16 +1,16 @@
 
 CREATE TABLE orders (
-    order_id SERIAL PRIMARY KEY, 
-    user_id INT, -- FOREIGN KEY
-    paymethod_id SERIAL, -- FOREIGN KEY
+    order_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY, 
+    user_id UUID, -- FOREIGN KEY
+    paymethod_id UUID, -- FOREIGN KEY
     total DECIMAL(10, 2),
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE order_items (
-    order_item_id SERIAL PRIMARY KEY,
-    order_id SERIAL, -- FOREIGN KEY
-    product_id SERIAL, -- FOREIGN KEY
+    order_item_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    order_id UUID, -- FOREIGN KEY
+    product_id UUID, -- FOREIGN KEY
     purchase_price DECIMAL(10, 2),
     quantity INT
 );
