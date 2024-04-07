@@ -1,4 +1,4 @@
-CREATE TABLE user (
+CREATE TABLE usuario (
     user_id SERIAL PRIMARY KEY,
     name VARCHAR(40) NOT NULL,
     last_name VARCHAR(60),
