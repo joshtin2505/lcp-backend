@@ -29,7 +29,7 @@ function usersRoutes(_req: Request, res: Response) {
 }
 function getAllUsers(_req: Request, res: Response) {
   pool.query(
-    'SELECT user_id, name, last_name, email, phone, phone_prefix FROM user;',
+    'SELECT user_id, name, last_name, email, phone, phone_prefix FROM usuario;',
     (error, result) => {
       if (error) {
         res.status(404).json(error)
@@ -45,7 +45,7 @@ function getAllUsers(_req: Request, res: Response) {
 function getUserById(req: Request, res: Response) {
   const id = req.params.userId
   pool.query(
-    'SELECT user_id, name, last_name, email, phone, phone_prefix FROM user WHERE user_id = $1',
+    'SELECT user_id, name, last_name, email, phone, phone_prefix FROM usuario WHERE user_id = $1',
     [id],
     (error, result) => {
       if (error) {
@@ -64,7 +64,7 @@ async function addUser(req: Request, res: Response) {
   try {
     const passwordHash = await bycript.hash(password, 10)
     const result = await pool.query(
-      `INSERT INTO users (name, last_name, email, password, role) 
+      `INSERT INTO usuario (name, last_name, email, password, role) 
     VALUES ($1, $2, $3, $4, $5)`,
       [name, lastName, email, passwordHash, role]
     )
@@ -80,7 +80,7 @@ function addOrdinalUser(req: Request, res: Response) {
   const role = roles.client
   console.log([name, lastName, email, password, role])
   pool.query(
-    `INSERT INTO user (name, last_name, email, password, role) 
+    `INSERT INTO usuario (name, last_name, email, password, role) 
     VALUES ($1, $2, $3, $4, $5)`,
     [name, lastName, email, password, role],
     (error: any, result) => {
@@ -112,7 +112,7 @@ function updateUser(req: Request, res: Response) {
     return
   }
   pool.query(
-    `UPDATE user SET name = $1, last_name = $2, email = $3, password = $4, role = $5, phone = $6, phonePrefix = $7 WHERE user_id = $8`,
+    `UPDATE usuario SET name = $1, last_name = $2, email = $3, password = $4, role = $5, phone = $6, phonePrefix = $7 WHERE user_id = $8`,
     [name, lastName, email, password, role, phone, phonePrefix, userId],
     (error, result: any) => {
       if (result === undefined) {
@@ -124,19 +124,24 @@ function updateUser(req: Request, res: Response) {
 }
 function deleteUser(req: Request, res: Response) {
   const id: Id = parseInt(req.params.userId)
-  pool.query(`DELETE FROM user WHERE user_id = $1`, [id], (error, result) => {
-    if (error) {
-      res.status(404).json(error)
-      return
+  pool.query(
+    `DELETE FROM usuario WHERE user_id = $1`,
+    [id],
+    (error, result) => {
+      if (error) {
+        res.status(404).json(error)
+        return
+      }
+      res.status(201).json(result.rows)
     }
-    res.status(201).json(result.rows)
-  })
+  )
 }
+// login ✅
 async function login(req: Request, res: Response) {
   const { email, password }: RequestLoginType = req.body
   console.log(req.body)
   const result = await pool.query(
-    `SELECT user_id, email, password, role FROM user WHERE email = $1`,
+    `SELECT user_id, email, password, role FROM usuario WHERE email = $1`,
     [email]
   )
   if (!result) {
@@ -170,11 +175,13 @@ async function login(req: Request, res: Response) {
     .cookie('token', token)
     .json({ message: userSuccess.USER_LOGGED })
 }
+// logout ✅
 function logout(_req: Request, res: Response) {
   return res
     .cookie('token', '', { expires: new Date(0), httpOnly: true, secure: true })
     .json({ message: userSuccess.USER_LOGOUT })
 }
+// verifyToken ✅
 function verifyToken(req: Request, res: Response) {
   const { token } = req.cookies
   if (!token) res.status(401).json({ message: tokenErrors.TOKEN_NOT_FOUND })
@@ -189,7 +196,7 @@ function verifyToken(req: Request, res: Response) {
     }
     const { id, role } = user as TokenPayload
     pool.query(
-      `SELECT user_id  FROM user WHERE user_id = $1`,
+      `SELECT user_id  FROM usuario WHERE user_id = $1`,
       [id],
       (error, result) => {
         if (error) {
